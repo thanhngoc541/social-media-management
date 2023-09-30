@@ -66,6 +66,7 @@ function AccountPage() {
             title: 'Instagram',
             description: 'Manage instagram profiles, posts...',
             avatar: './instagram.jpeg',
+            isLogin: isLoginFB,
         },
         {
             title: 'Twitter',
