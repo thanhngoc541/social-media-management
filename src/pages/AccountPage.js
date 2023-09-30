@@ -13,7 +13,7 @@ function AccountPage() {
 
     // Logs in a Facebook user
     const loginFB = useCallback(() => {
-        window.FB.login((response) => {
+        window.FB?.login((response) => {
             console.log(response);
             localStorage.setItem('fbUserAccessToken', response.authResponse?.accessToken);
             setFbUserAccessToken(response.authResponse?.accessToken);
@@ -72,6 +72,7 @@ function AccountPage() {
             title: 'Twitter',
             description: 'Manage twiter accounts and feeds',
             avatar: './x.jpeg',
+            unSupported: true,
         },
     ];
     return (
@@ -89,7 +90,15 @@ function AccountPage() {
                                 src={item.avatar ?? './facebook.jpg'}
                             />
                         }
-                        actions={[item.isLogin ? <div>Loged in</div> : <UserAddOutlined onClick={item.onClick} />]}
+                        actions={[
+                            item.isLogin ? (
+                                <div>Loged in</div>
+                            ) : !!item.unSupported ? (
+                                <div>UnSupported</div>
+                            ) : (
+                                <UserAddOutlined onClick={item.onClick} />
+                            ),
+                        ]}
                     >
                         <Meta title={item.title} description={item.description} />
                     </Card>

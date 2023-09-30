@@ -26,6 +26,7 @@ function PostPage() {
     const [open, setOpen] = useState(false);
     let tempsFBPosts = [];
     const [chosenPages, setChosenPages] = useState([]);
+    const [chosenFilter, setchosenFilter] = useState([]);
     const [message, setMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState(null);
 
@@ -221,6 +222,10 @@ function PostPage() {
     const handleChange = (value) => {
         setChosenPages(value);
     };
+    const handleFilterChange = (value) => {
+        console.log(value);
+        setchosenFilter(value);
+    };
     const handleMessageChange = (event) => {
         console.log(event.target.value);
         console.log(message);
@@ -277,9 +282,68 @@ function PostPage() {
 
     return (
         <>
-            <Button onClick={showModal} type="primary">
-                Create a post
-            </Button>
+            <Space
+                style={{
+                    width: '500px',
+                    marginBottom: 20,
+                }}
+                direction="horizontal"
+            >
+                <Select
+                    mode="multiple"
+                    style={{ width: '300px' }}
+                    placeholder="filter pages..."
+                    defaultValue={[]}
+                    onChange={handleFilterChange}
+                    optionLabelProp="label"
+                >
+                    {pages?.map((page, index) => (
+                        <Option
+                            key={'facebook,' + index}
+                            value={page.id}
+                            label={
+                                <Space>
+                                    <Avatar
+                                        src={page?.picture?.data?.url}
+                                        style={{ marginRight: 0, height: 20, width: 20 }}
+                                    ></Avatar>
+                                    {page.name}
+                                </Space>
+                            }
+                        >
+                            <Space>
+                                <Avatar src={page?.picture?.data?.url} style={{ marginRight: 0 }}></Avatar>
+                                {page.name}
+                                <span style={{ float: 'right' }}>{'(Facebook)'}</span>
+                            </Space>
+                        </Option>
+                    ))}
+                    {insPages?.map((page, index) => (
+                        <Option
+                            key={'instagram,' + index}
+                            value={page.id}
+                            label={
+                                <Space>
+                                    <Avatar
+                                        src={page?.profile_picture_url}
+                                        style={{ marginRight: 0, height: 20, width: 20 }}
+                                    ></Avatar>
+                                    {page.name}
+                                </Space>
+                            }
+                        >
+                            <Space>
+                                <Avatar src={page?.profile_picture_url} style={{ marginRight: 0 }}></Avatar>
+                                {page.name}
+                                <span style={{ float: 'right' }}>{'(Instagram)'}</span>
+                            </Space>
+                        </Option>
+                    ))}
+                </Select>
+                <Button onClick={showModal} type="primary">
+                    Create a post
+                </Button>
+            </Space>
             <Modal title="New Post" open={open} onOk={handleOk} confirmLoading={confirmLoading} onCancel={handleCancel}>
                 <Space
                     style={{
@@ -354,7 +418,11 @@ function PostPage() {
             <List
                 grid={{ gutter: 16, column: 1 }}
                 dataSource={posts}
-                renderItem={(item) => {
+                renderItem={(item, index) => {
+                    console.log(chosenFilter);
+                    console.log(item.id);
+                    if (chosenFilter.length != 0 && !chosenFilter.some((pageId) => item.id.startsWith(pageId)))
+                        return null;
                     if (item.message || item.full_picture || item.caption || item.media_url)
                         return (
                             <List.Item key={item.id}>
