@@ -27,22 +27,7 @@ function AccountPage() {
                     var uid = response.authResponse.userID;
                     var accessToken = response.authResponse?.accessToken;
                     setIsLoginFB(true);
-                    window.FB.api(
-                        '/oauth/access_token',
-                        'GET',
-                        {
-                            grant_type: 'fb_exchange_token',
-                            client_id: ' 24044447041837444',
-                            client_secret: '96044cf44c83c8a211bda8f221a7422e',
-                            fb_exchange_token: accessToken,
-                        },
-                        function (response) {
-                            console.log(response);
-                            // Insert your code here
-                            console.log(response.access_token);
-                            localStorage.setItem('fbUserAccessToken', response.access_token);
-                        },
-                    );
+                    localStorage.setItem('fbUserAccessToken', accessToken);
                 } else if (response.status === 'not_authorized') {
                     // the user is logged in to Facebook,
                     // but has not authenticated your app
